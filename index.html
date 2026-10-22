@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Water Dashboard</title>
+    <script src="https://jsdelivr.net"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-6">
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-cyan-400">💧 Smart Water Distribution Dashboard</h1>
+        <p class="text-slate-400">Live Status & Alerts</p>
+    </header>
+
+    <!-- Alerts Section -->
+    <div id="alerts-container" class="mb-6 space-y-2"></div>
+
+    <!-- Zones Grid -->
+    <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Dynamic Cards Inserted Here -->
+    </main>
+
+    <script>
+        // Simulated Network Data (At least 5 Zones)
+        const zonesData = [
+            { id: "zone-1", name: "Zone A (North)", reservoir: 65, supply: 1200, pressure: 3.2, timing: "06:00 - 09:00", status: "Healthy" },
+            { id: "zone-2", name: "Zone B (South)", reservoir: 20, supply: 950, pressure: 2.8, timing: "07:00 - 10:00", status: "Critical" },
+            { id: "zone-3", name: "Zone C (East)", reservoir: 80, supply: 1500, pressure: 5.1, timing: "06:30 - 09:30", status: "Abnormal" },
+            { id: "zone-4", name: "Zone D (West)", reservoir: 45, supply: 1100, pressure: 3.4, timing: "17:00 - 20:00", status: "Healthy" },
+            { id: "zone-5", name: "Zone E (Central)", reservoir: 12, supply: 1800, pressure: 1.2, timing: "08:00 - 11:00", status: "Critical" }
+        ];
+
+        const alertsContainer = document.getElementById('alerts-container');
+        const mainGrid = document.querySelector('main');
+
+        zonesData.forEach(zone => {
+            // Check Predefined Ranges (Pressure normal: 2.0 to 4.5 bar, Reservoir > 25%)
+            let alertMsg = '';
+            if (zone.reservoir < 25) {
+                alertMsg += `⚠️ Low Reservoir level (${zone.reservoir}%) in ${zone.name}. `;
+            }
+            if (zone.pressure < 2.0 || zone.pressure > 4.5) {
+                alertMsg += `🚨 Abnormal pressure (${zone.pressure} bar) in ${zone.name}.`;
+            }
+
+            if (alertMsg) {
+                alertsContainer.innerHTML += `<div class="bg-red-500/20 border border-red-500 text-red-200 p-4 rounded-lg">${alertMsg}</div>`;
+            }
+
+            mainGrid.innerHTML += `
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-cyan-300">${zone.name}</h2>
+                    <p>📊 <strong>Reservoir Level:</strong> ${zone.reservoir}%</p>
+                    <p>🚰 <strong>Daily Supply:</strong> ${zone.supply} kL</p>
+                    <p>⏱️ <strong>Pressure:</strong> ${zone.pressure} bar</p>
+                    <p>🕒 <strong>Timings:</strong> ${zone.timing}</p>
+                    <p class="mt-3">Status: <span class="${zone.status === 'Healthy' ? 'text-green-400' : 'text-red-400'} font-bold">${zone.status}</span></p>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
