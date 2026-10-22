@@ -1,42 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: water-monitoring-system
-  labels:
-    app: water-monitor
+  name: water-monitor
 spec:
   replicas: 2
-  revisionHistoryLimit: 5
   selector:
     matchLabels:
       app: water-monitor
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
   template:
     metadata:
       labels:
         app: water-monitor
     spec:
       containers:
-      - name: dashboard
+      - name: water-monitor-container
         image: YOUR_DOCKERHUB_USERNAME/water-monitor:latest
-        imagePullPolicy: Always
         ports:
         - containerPort: 80
-        livenessProbe:
+        readinessProbe:
           httpGet:
-            path: /index.html
+            path: /
             port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          initialDelaySeconds: 2
+          periodSeconds: 3
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: water-monitoring-service
+  name: water-monitor-service
 spec:
   type: NodePort
   selector:
