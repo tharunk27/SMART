@@ -2,143 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Smart Water Distribution & Leakage Monitoring Dashboard</title>
+    <title>Smart Water Distribution Dashboard</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 20px; color: #333; }
-        h1, h2 { color: #0275d8; }
-        .card { background: white; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f9; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1, h2 { color: #0056b3; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #0275d8; color: white; }
-        .alert { background-color: #d9534f; color: white; padding: 10px; border-radius: 5px; margin-top: 5px; font-weight: bold; }
-        .safe { color: green; font-weight: bold; }
-        .danger { color: red; font-weight: bold; }
-        .filter-btn { padding: 8px 12px; margin-right: 5px; background: #0275d8; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .alert { background-color: #ffdddd; border-left: 6px solid #f44336; padding: 10px; margin-bottom: 15px; color: #d8000c; }
+        .healthy { color: green; font-weight: bold; }
+        .critical { color: red; font-weight: bold; }
+        select { padding: 8px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
-
-    <h1>💧 Smart Water Distribution Dashboard</h1>
-
-    <!-- Zone Analytics Summary -->
-    <div class="card">
-        <h2>📊 Zone Analytics Summary</h2>
-        <p><strong>Total Daily Water Supplied:</strong> <span id="total-supply">14,200</span> Kilolitres</p>
-        <p><strong>Zone with Highest Consumption:</strong> <span class="danger">Zone B (3,500 KL)</span></p>
-        <div>
-            <button class="filter-btn" onclick="filterZones('All')">Show All Zones</button>
-            <button class="filter-btn" onclick="filterZones('Alert')">Show Alerts Only</button>
-        </div>
-    </div>
-
-    <!-- Water Distribution Status Table -->
-    <div class="card">
-        <h2>📍 Distribution Zones Overview</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Zone</th>
-                    <th>Reservoir Level (%)</th>
-                    <th>Daily Supply (KL)</th>
-                    <th>Pipeline Pressure (PSI)</th>
-                    <th>Supply Timings</th>
-                    <th>Network Status</th>
-                </tr>
-            </thead>
-            <tbody id="zone-table">
-                <tr data-alert="true">
-                    <td>Zone A</td>
-                    <td class="danger">22% (Low)</td>
-                    <td>2,800</td>
-                    <td>45</td>
-                    <td>06:00 - 09:00</td>
-                    <td><span class="danger">Critical Alert</span></td>
-                </tr>
-                <tr data-alert="false">
-                    <td>Zone B</td>
-                    <td>75%</td>
-                    <td>3,500</td>
-                    <td>52</td>
-                    <td>07:00 - 10:00</td>
-                    <td><span class="safe">Normal</span></td>
-                </tr>
-                <tr data-alert="true">
-                    <td>Zone C</td>
-                    <td>60%</td>
-                    <td>3,100</td>
-                    <td class="danger">25 (Low)</td>
-                    <td>06:30 - 09:30</td>
-                    <td><span class="danger">Pressure Alert</span></td>
-                </tr>
-                <tr data-alert="false">
-                    <td>Zone D</td>
-                    <td>85%</td>
-                    <td>2,400</td>
-                    <td>55</td>
-                    <td>08:00 - 11:00</td>
-                    <td><span class="safe">Normal</span></td>
-                </tr>
-                <tr data-alert="false">
-                    <td>Zone E</td>
-                    <td>40%</td>
-                    <td>2,400</td>
-                    <td>48</td>
-                    <td>05:30 - 08:30</td>
-                    <td><span class="safe">Normal</span></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="container">
+        <h1>💧 Smart Water Distribution & Leakage Monitoring</h1>
         
-        <!-- Live Automated Alerts -->
-        <div id="alerts-section">
-            <div class="alert">⚠️ ALERT: Zone A Reservoir is below 25%! Immediate Action Required.</div>
-            <div class="alert">⚠️ ALERT: Zone C Pipeline Pressure (25 PSI) dropped below normal threshold!</div>
-        </div>
-    </div>
+        <!-- Alerts Trigger System -->
+        <div id="alerts-container"></div>
 
-    <!-- Leakage Incident Log -->
-    <div class="card">
-        <h2>🛠️ Leakage Incident Log</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Incident ID</th>
-                    <th>Zone</th>
-                    <th>Severity</th>
-                    <th>Detection Time</th>
-                    <th>Maintenance Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>#LK-401</td>
-                    <td>Zone A</td>
-                    <td><span class="danger">High</span></td>
-                    <td>2026-10-22 09:15</td>
-                    <td>Dispatched</td>
-                </tr>
-                <tr>
-                    <td>#LK-405</td>
-                    <td>Zone C</td>
-                    <td>Medium</td>
-                    <td>2026-10-22 11:40</td>
-                    <td>In Progress</td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Zone Analytics -->
+        <div class="card">
+            <h2>Zone Analytics Summary</h2>
+            <p><strong>Total Daily Water Supplied:</strong> 7,500 KL</p>
+            <p><strong>Highest Consumption Zone:</strong> Zone 3 (Industrial)</p>
+        </div>
+
+        <!-- Filtered Distribution Table -->
+        <div class="card">
+            <h2>Distribution Zones Status</h2>
+            <label for="zoneFilter">Filter Status: </label>
+            <select id="zoneFilter" onchange="filterZones()">
+                <option value="all">All Zones</option>
+                <option value="Normal">Normal</option>
+                <option value="Alert">Alert</option>
+            </select>
+            <table id="zonesTable">
+                <thead>
+                    <tr>
+                        <th>Zone Name</th>
+                        <th>Reservoir Level</th>
+                        <th>Daily Supply (KL)</th>
+                        <th>Pipeline Pressure (PSI)</th>
+                        <th>Supply Timings</th>
+                        <th>Network Status</th>
+                    </tr>
+                </thead>
+                <tbody id="zonesBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Leakage Incident Log -->
+        <div class="card">
+            <h2>Leakage Incident Log</h2>
+            <table>
+                <thead>
+                    <tr><th>Incident ID</th><th>Zone</th><th>Severity</th><th>Detection Time</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>LNK-042</td><td>Zone 2 (North)</td><td class="critical">High</td><td>10:30 AM</td><td><span style="color:orange;">In Progress</span></td></tr>
+                    <tr><td>LNK-045</td><td>Zone 5 (Downtown)</td><td>Low</td><td>11:15 AM</td><td><span style="color:blue;">Scheduled</span></td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        function filterZones(type) {
-            const rows = document.querySelectorAll('#zone-table tr');
-            rows.forEach(row => {
-                if (type === 'Alert') {
-                    row.style.display = row.getAttribute('data-alert') === 'true' ? '' : 'none';
-                } else {
-                    row.style.display = '';
-                }
+        const zonesData = [
+            { name: "Zone 1 (East)", level: 65, supply: 1200, pressure: 45, timing: "06:00-09:00", status: "Normal" },
+            { name: "Zone 2 (North)", level: 20, supply: 1500, pressure: 38, timing: "07:00-10:00", status: "Alert" }, // Low level (<25%)
+            { name: "Zone 3 (Industrial)", level: 80, supply: 2300, pressure: 75, timing: "Continuous", status: "Alert" }, // High pressure (>70)
+            { name: "Zone 4 (South)", level: 55, supply: 1100, pressure: 42, timing: "17:00-20:00", status: "Normal" },
+            { name: "Zone 5 (Downtown)", level: 40, supply: 1400, pressure: 15, timing: "08:00-11:00", status: "Alert" } // Low pressure (<20)
+        ];
+
+        function renderTable(data) {
+            const tbody = document.getElementById("zonesBody");
+            tbody.innerHTML = "";
+            let alertsHtml = "";
+
+            data.forEach(zone => {
+                if (zone.level < 25) alertsHtml += `<div class="alert">⚠️ <strong>Critical:</strong> ${zone.name} reservoir low (${zone.level}%)</div>`;
+                if (zone.pressure < 20 || zone.pressure > 70) alertsHtml += `<div class="alert">⚠️ <strong>Alert:</strong> ${zone.name} abnormal pressure (${zone.pressure} PSI)</div>`;
+
+                tbody.innerHTML += `<tr>
+                    <td>${zone.name}</td><td>${zone.level}%</td><td>${zone.supply}</td><td>${zone.pressure}</td><td>${zone.timing}</td>
+                    <td class="${zone.status === 'Normal' ? 'healthy' : 'critical'}">${zone.status}</td>
+                </tr>`;
             });
+            document.getElementById("alerts-container").innerHTML = alertsHtml;
         }
+
+        function filterZones() {
+            const val = document.getElementById("zoneFilter").value;
+            renderTable(val === "all" ? zonesData : zonesData.filter(z => z.status === val));
+        }
+        renderTable(zonesData);
     </script>
 </body>
 </html>
